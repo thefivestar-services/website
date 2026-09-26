@@ -1,7 +1,6 @@
 # robots.txt — 5 STAR Sales & Service
-# NOTE: search engines only read robots.txt at the ROOT of a domain.
-# If this site is at https://thefivestar.in/ this file is not read;
-# it takes effect once you use a custom domain (see README → "Custom domain").
+# Search engines read this file only at the root of a domain (e.g. /robots.txt on the custom domain).
+# The Sitemap line below is updated automatically by set-site-url.sh.
 User-agent: *
 Allow: /
 Disallow: /templates/

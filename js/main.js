@@ -40,6 +40,11 @@ var SITE_CONFIG = {
   "use strict";
   var C = SITE_CONFIG;
 
+  // Sends a GA4 event when analytics is enabled (see ga4Id). Never pass names or phone numbers here.
+  function track(name, params) {
+    if (typeof window.gtag === "function") window.gtag("event", name, params || {});
+  }
+
   /* ---------- Mobile navigation ---------- */
   var toggle = document.querySelector(".nav-toggle");
   var nav = document.getElementById("site-nav");
@@ -156,6 +161,7 @@ var SITE_CONFIG = {
         .then(function (res) {
           if (res.ok) {
             lastPayload = payload;
+            track("generate_lead", { lead_source: "contact_form", service: data.get("service") || "not set" });
             showStatus("success", "Thank you, " + data.get("name") + ". Your enquiry has been sent. We will call you on " + data.get("phone") + " soon. For urgent work, please call us directly.");
             form.reset();
             return;
@@ -186,6 +192,7 @@ var SITE_CONFIG = {
         if (f.name.value.trim()) text += "\nName: " + f.name.value.trim();
         if (f.phone.value.trim()) text += "\nPhone: " + f.phone.value.trim();
         if (f.message.value.trim()) text += "\n" + f.message.value.trim();
+        track("click_whatsapp", { link_location: "contact_form", service: f.service.value || "not set" });
         window.open("https://wa.me/" + C.whatsappNumber + "?text=" + encodeURIComponent(text), "_blank", "noopener");
       });
     }
@@ -253,12 +260,15 @@ var SITE_CONFIG = {
     window.gtag = function () { window.dataLayer.push(arguments); };
     window.gtag("js", new Date());
     window.gtag("config", C.ga4Id);
-    // Track calls / WhatsApp taps as events.
+    // Track call / WhatsApp taps as events. link_location says which part of the page was tapped.
     document.addEventListener("click", function (e) {
       var a = e.target.closest("a[href]");
       if (!a) return;
-      if (a.href.indexOf("tel:") === 0) window.gtag("event", "click_call");
-      else if (a.href.indexOf("wa.me") > -1) window.gtag("event", "click_whatsapp");
+      var where = a.closest(".action-bar") ? "mobile_bar" : a.closest(".site-header") ? "header"
+        : a.closest(".hero, .page-hero") ? "hero" : a.closest(".site-footer") ? "footer"
+        : a.closest("#contact") ? "contact" : "page";
+      if (a.href.indexOf("tel:") === 0) track("click_call", { link_location: where });
+      else if (a.href.indexOf("wa.me") > -1) track("click_whatsapp", { link_location: where });
     });
   }
 })();

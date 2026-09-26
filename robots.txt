@@ -1,0 +1,9 @@
+# robots.txt — 5 STAR Sales & Service
+# NOTE: search engines only read robots.txt at the ROOT of a domain.
+# If this site is at https://thefivestar.in/ this file is not read;
+# it takes effect once you use a custom domain (see README → "Custom domain").
+User-agent: *
+Allow: /
+Disallow: /templates/
+
+Sitemap: https://thefivestar.in/sitemap.xml

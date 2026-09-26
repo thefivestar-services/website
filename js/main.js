@@ -32,7 +32,7 @@ var SITE_CONFIG = {
   ],
 
   // Google Analytics 4 measurement ID, e.g. "G-XXXXXXXXXX". Leave empty to disable analytics.
-  ga4Id: ""
+  ga4Id: "G-E0GMSKKG73"
 };
 /* ======================= END OF SITE CONFIG ============================ */
 
